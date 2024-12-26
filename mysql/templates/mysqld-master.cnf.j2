@@ -1,0 +1,4 @@
+bind-address            = {{ hostvars['mysql_master'].ansible_host }}
+server-id               = {{ server_id }}
+log_bin                 = /var/log/mysql/mysql-bin.log
+

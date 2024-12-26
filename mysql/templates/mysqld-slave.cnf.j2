@@ -1,0 +1,4 @@
+bind-address            = {{ hostvars['mysql_slave'].ansible_host }}
+server-id               = {{ server_id }}
+log_bin                 = /var/log/mysql/mysql-bin.log
+relay-log               = /var/log/mysql/mysql-relay-bin.log
