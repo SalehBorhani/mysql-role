@@ -1,0 +1,7 @@
+---
+- name: mysql
+  hosts: mysql
+  gather_facts: no
+  become: yes
+  roles:
+    - ./mysql

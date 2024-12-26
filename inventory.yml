@@ -1,0 +1,14 @@
+mysql:
+  hosts:
+    mysql_master:
+      ansible_host: 192.168.1.105
+      mysql_replication_role: "master"
+      server_id: 1
+      ansible_python_interpreter: "/usr/bin/python3"
+
+    mysql_slave:
+      ansible_host: 192.168.1.106
+      mysql_replication_role: "slave"
+      server_id: 2
+      ansible_python_interpreter: "/usr/bin/python3"
+

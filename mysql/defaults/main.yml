@@ -1,0 +1,7 @@
+---
+# defaults file for mysql
+server_id: 1
+mysql_replication_user:
+  name: replica
+  password: "123456"
+  privilage: "*.*:REPLICATION SLAVE"
