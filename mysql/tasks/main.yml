@@ -2,9 +2,7 @@
 # tasks file for mysql
 - name: Install required package
   apt:
-    name:
-      - mysql-server
-      - python3-pip
+    name: "{{ mysql_packages }}"
     update_cache: yes
 
 - name: Install pymysql
@@ -13,7 +11,7 @@
 
 - name: Render Mysql master configuration file
   template:
-    src: templates/mysqld-master.cnf.j2
+    src: templates/mysql.cnf.j2
     dest: /etc/mysql/mysql.conf.d/mysqld.cnf
     mode: '0644'
   when:
@@ -56,7 +54,7 @@
 
 - name: Render Mysql slave configuration file
   template:
-    src: templates/mysqld-slave.cnf.j2
+    src: templates/mysql.cnf.j2
     dest: /etc/mysql/mysql.conf.d/mysqld.cnf
     mode: '0644'
   when:
@@ -80,7 +78,6 @@
     master_log_pos: "{{ hostvars['mysql_master'].master_log_pos }}"
   when:
     - mysql_replication_role == 'slave'
-    - mysql_replication_user_stat is changed
 
 - name: Start the slave
   mysql_replication:
