@@ -28,14 +28,12 @@
   mysql_user:
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: "{{ mysql_replication_user.name }}"
-    host: "{{ hostvars['mysql_slave'].ansible_host | default('%') }}"
+    host: "%"
     password: "{{ mysql_replication_user.password }}"
     priv: "{{ mysql_replication_user.privilage }}"
     state: present
-  register: mysql_replication_user_stat
   when:
     - mysql_replication_role == 'master'
-    - mysql_replication_user.name is defined
 
 - name: Check master replication status.
   mysql_replication:
@@ -71,13 +69,14 @@
   mysql_replication:
     login_unix_socket: /var/run/mysqld/mysqld.sock
     mode: changeprimary
-    master_host: "{{ hostvars['mysql_master'].ansible_host }}"
+    master_host: "{{ hostvars['mysql_master_0'].ansible_host }}"
     master_user: "{{ mysql_replication_user.name }}"
     master_password: "{{ mysql_replication_user.password }}"
-    master_log_file: "{{ hostvars['mysql_master'].master_log_file }}"
-    master_log_pos: "{{ hostvars['mysql_master'].master_log_pos }}"
+    master_log_file: "{{ hostvars['mysql_master_0'].master_log_file }}"
+    master_log_pos: "{{ hostvars['mysql_master_0'].master_log_pos }}"
   when:
     - mysql_replication_role == 'slave'
+
 
 - name: Start the slave
   mysql_replication:

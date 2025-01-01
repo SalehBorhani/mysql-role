@@ -6,14 +6,13 @@ user		= mysql
 # datadir	= /var/lib/mysql
 
 {% if mysql_replication_role == "master" %}
-bind-address		= {{ hostvars['mysql_master'].ansible_host }}
-mysqlx-bind-address	= {{ hostvars['mysql_master'].ansible_host }}
+bind-address		= {{ ansible_host }}
+mysqlx-bind-address	= {{ ansible_host }}
 {% endif %}
 
 {% if mysql_replication_role == "slave" %}
-bind-address		= {{ hostvars['mysql_slave'].ansible_host }}
-mysqlx-bind-address	= {{ hostvars['mysql_slave'].ansible_host }}
-
+bind-address		= {{ ansible_host }}
+mysqlx-bind-address	= {{ ansible_host }}
 # Slave specific configuration
 relay_log = /var/log/mysql/mysql-relay-bin.log
 {% endif %}
