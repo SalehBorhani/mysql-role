@@ -1,0 +1,9 @@
+---
+- name: Install required package
+  apt:
+    name: "{{ mysql_pkg }}"
+    update_cache: yes
+
+- name: Install pymysql
+  pip:
+    name: "{{ mysql_python_pkg }}"

@@ -2,9 +2,12 @@
 # defaults file for mysql
 server_id: 1
 
-mysql_packages:
+mysql_pkg:
   - mysql-server
   - python3-pip
+
+mysql_python_pkg:
+  - PyMySQL
 
 ## Enable gtid based replication
 gtid_based: false

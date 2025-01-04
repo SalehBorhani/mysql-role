@@ -1,0 +1,36 @@
+---
+- name: Render Mysql slave configuration file
+  template:
+    src: templates/mysql.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    mode: '0644'
+
+- name: Restart the mysql slave service
+  systemd:
+    name: mysql
+    state: restarted
+
+- name: Configure replication on the slave.
+  mysql_replication:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    mode: changeprimary
+    master_host: "{{ hostvars['mysql_master_0'].ansible_host }}"
+    master_user: "{{ mysql_replication_user.name }}"
+    master_password: "{{ mysql_replication_user.password }}"
+    master_log_file: "{{ hostvars['mysql_master_0'].master_log_file }}"
+    master_log_pos: "{{ hostvars['mysql_master_0'].master_log_pos }}"
+
+- name: Start the slave
+  mysql_replication:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    mode: startreplica
+
+- name: Get slave status
+  mysql_replication:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    mode: getreplica
+  register: salve_status
+
+- name: Show slave status
+  debug:
+    msg: salve_status.stdout

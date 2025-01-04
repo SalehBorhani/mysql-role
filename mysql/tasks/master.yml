@@ -1,0 +1,31 @@
+---
+- name: Render Mysql master configuration file
+  template:
+    src: templates/mysql.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    mode: '0644'
+
+- name: Restart the mysql master service
+  systemd:
+    name: mysql
+    state: restarted
+
+- name: Ensure replication user exists on master.
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_replication_user.name }}"
+    host: "%"
+    password: "{{ mysql_replication_user.password }}"
+    priv: "{{ mysql_replication_user.privilage }}"
+    state: present
+
+- name: Check master replication status.
+  mysql_replication:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    mode: getprimary
+  register: master
+
+- name: Set replication facts for slave (only on master)
+  set_fact:
+    master_log_file: "{{ master['File'] }}"
+    master_log_pos: "{{ master['Position'] | int }}"
